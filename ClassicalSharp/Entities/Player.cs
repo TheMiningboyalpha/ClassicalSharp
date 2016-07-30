@@ -99,7 +99,13 @@ namespace ClassicalSharp.Entities {
 			Vector3 p111, p121, p212, p222;
 			int col = FastColour.WhitePacked;
 			Vector2 size = new Vector2( nameTex.Width * scale, nameTex.Height * scale );
-			Utils.CalcBillboardPoints( size, pos, ref game.View, out p111, out p121, out p212, out p222 );
+			if( game.Entities.NamesMode != NameMode.CTFMode )
+				Utils.CalcBillboardPoints( size, pos, ref game.View, 
+				                          out p111, out p121, out p212, out p222 );
+			else
+				CalcBillboardPoints( size, pos, ref game.View, ref game.Projection, 
+				                          out p111, out p121, out p212, out p222 );
+			
 			api.texVerts[0] = new VertexP3fT2fC4b( ref p111, nameTex.U1, nameTex.V2, col );
 			api.texVerts[1] = new VertexP3fT2fC4b( ref p121, nameTex.U1, nameTex.V1, col );
 			api.texVerts[2] = new VertexP3fT2fC4b( ref p222, nameTex.U2, nameTex.V1, col );
@@ -107,6 +113,21 @@ namespace ClassicalSharp.Entities {
 			
 			api.SetBatchFormat( VertexFormat.P3fT2fC4b );
 			api.UpdateDynamicIndexedVb( DrawMode.Triangles, api.texVb, api.texVerts, 4, 6 );
+		}
+		
+		static void CalcBillboardPoints( Vector2 size, Vector3 position, ref Matrix4 view, ref Matrix4 proj, out Vector3 p111,
+		                                out Vector3 p121, out Vector3 p212, out Vector3 p222 ) {
+			Vector3 centre = position; centre.Y += size.Y / 2;
+			Vector4 temp = Vector4.Transform( new Vector4( position, 1 ), view * proj );
+			size.X *= temp.W * 0.2f; size.Y *= temp.W * 0.2f;
+			
+			Vector3 a = new Vector3( view.Row0.X * size.X, view.Row1.X * size.X, view.Row2.X * size.X ); // right * size.X
+			Vector3 b = new Vector3( view.Row0.Y * size.Y, view.Row1.Y * size.Y, view.Row2.Y * size.Y ); // up * size.Y
+			
+			p111 = centre + a * -0.5f + b * -0.5f;
+			p121 = centre + a * -0.5f + b *  0.5f;
+			p212 = centre + a *  0.5f + b * -0.5f;
+			p222 = centre + a *  0.5f + b *  0.5f;
 		}
 		
 		protected void CheckSkin() {

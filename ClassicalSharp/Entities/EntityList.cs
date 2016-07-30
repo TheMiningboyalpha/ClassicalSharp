@@ -6,7 +6,7 @@ using ClassicalSharp.GraphicsAPI;
 
 namespace ClassicalSharp.Entities {
 
-	public enum NameMode { NoNames, HoveredOnly, All, AllAndHovered, }
+	public enum NameMode { NoNames, HoveredOnly, All, AllAndHovered, CTFMode }
 	
 	public enum EntityShadow { None, SnapToBlock, Circle, CircleAll, }
 	
@@ -89,7 +89,7 @@ namespace ClassicalSharp.Entities {
 			api.DepthTest = false;
 			
 			for( int i = 0; i < Players.Length; i++ ) {
-				if( Players[i] != null && i == closestId && i != 255 )
+				if( Players[i] != null && (i == closestId && i != 255 || NamesMode == NameMode.CTFMode) )
 					Players[i].RenderName();
 			}
 			api.Texturing = false;

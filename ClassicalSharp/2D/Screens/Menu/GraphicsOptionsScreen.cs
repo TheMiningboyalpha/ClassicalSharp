@@ -83,6 +83,7 @@ namespace ClassicalSharp.Gui {
 				"&eAll: &fAll player names are drawn normally.",
 				"&eAllAndHovered: &fName of the targeted player is drawn see-through.",
 				"&f      All other player names are drawn normally.",
+				"&eCTFMode: &fAll names are drawn at same size and see-through",
 			};			
 			descriptions[4] = new[] {
 				"&eNone: &fNo entity shadows are drawn.",

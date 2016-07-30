@@ -40,7 +40,8 @@ namespace ClassicalSharp.Entities {
 		public override void RenderName() { 
 			if( !shouldRender ) return;
 			float dist = Model.RenderDistance( this );
-			if( dist <= 32 * 32 ) DrawName();
+			float threshold = game.Entities.NamesMode == NameMode.CTFMode ? 3200000 : 32 * 32;
+			if( dist <= threshold ) DrawName();
 		}
 	}
 }
